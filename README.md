@@ -25,3 +25,7 @@ For example, /posts/:categoryName.
 🏹 Create additional SQL queries to show filtered posts.
 
 ---
+
+## Resources
+
+- [Design Methodologies](https://mui.com/material-ui/getting-started/installation/)
