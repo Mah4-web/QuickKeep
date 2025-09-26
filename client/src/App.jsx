@@ -1,2 +1,30 @@
 // TODO: Set up routes in here. (Routes, Route)
 //- All our components will be rendered in here
+
+import Home from './Components/Home';
+import Entries from './Components/Entries';
+import AddEntry from './Components/Entries';
+import Navigation from './Components/Navigation';
+import NotFound from './Components/NotFound';
+
+import {Routes, Route} from "react-router";
+
+export default function app(){
+
+    return (
+        <>
+        <Navigation />
+        <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/add-entry" element={<AddEntry />} />
+        <Route path="/entries" element={<Entries />} />
+        <Route path="/entries/:type" element={<Entries />} />
+        <Route path="/categories/:category" element={<Entries />} />
+        <Route path="*" element={<NotFound />} />
+        </Routes>
+        
+        </>
+    )
+}
+
+
