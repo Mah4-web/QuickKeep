@@ -9,7 +9,7 @@ import NotFound from './Components/NotFound';
 
 import {Routes, Route} from "react-router";
 
-export default function app(){
+export default function App(){
 
     return (
         <>
