@@ -75,3 +75,27 @@ app.delete("/delete-entry/:id", (req, res) => {
     }
 });
 
+//TODO: update an entry in the entries table
+app.put("/update-entry/:id", async(req, res) => {
+    try {
+    
+    const paramsId = req.params.id;
+    const newEntry = req.body;
+
+    const query = await db.query(
+      `UPDATE entries SET title = $1, content= $2, likes = $3, type_id = $4, category_id = $5 WHERE id = $6 RETURNING *;`,
+        [
+        newEntry.title,
+        newEntry.content,
+        newEntry.likes,
+        newEntry.typeId,
+        newEntry.categoryId,
+        paramsId,
+        ]
+    );
+    } catch (error) {
+    console.error("Error in update-entries route", error);
+    res.status(500).json({ success: false });
+    }
+});
+
