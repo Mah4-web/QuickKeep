@@ -56,3 +56,22 @@ app.post("/add-entries",(req, res) => {
     }
 });
 
+//TODO: delete an entry from the entries table
+app.delete("/delete-entry/:id", (req, res) => {
+    try {
+    //the request has an object called params
+    const paramsId = req.params.id;
+
+    //destructure the params object
+    // const { id } = req.params;
+
+    //query the database to delete one entry
+    const query = db.query(`DELETE FROM entries WHERE id = $1 RETURNING *;`, [
+        paramsId,
+    ]);
+    } catch (error) {
+    console.error("Error in the delete-entries route", error);
+    res.status(500).json({ success: false });
+    }
+});
+
