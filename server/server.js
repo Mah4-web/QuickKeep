@@ -35,4 +35,24 @@ app.get("/entries", async (_, res) => {
     }
 });
 
+// TODO: create new data in the entries table
+
+app.post("/add-entries",(req, res) => {
+  // const emtriedData = req.body;
+  //destructure the body (alternative)
+    const { title, content, likes, typeId, categoryId } = req.body;
+
+    try {
+    const query = db.query(
+         //I tested my query in the SQL editor first to check syntax
+        `INSERT INTO entries (title, content, likes, type_id, category_id) VALUES 
+($1, $2, $3, $4, $5);`,
+        [title, content, likes, typeId, categoryId]
+    );
+    res.status(200).json({ success: true });
+    } catch (error) {
+    console.error("Error in add-entries route", error);
+    res.status(500).json({ success: false });
+    }
+});
 
