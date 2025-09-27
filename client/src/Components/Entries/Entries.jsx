@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import Search from "./Search/Search";
+import FilterDropdown from '../FilterDropdown/FilterDropdown';
+import EntryCard from '../EntryCard/EntryCard'; 
+
 
 export default function Entries() {
   const [entries, setEntries] = useState([]);
