@@ -40,7 +40,7 @@ app.get("/entries", async (_, res) => {
 
 app.get('/types', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM types;');
+    const result = await db.query('SELECT name FROM types;');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching types:', error);
@@ -51,13 +51,38 @@ app.get('/types', async (req, res) => {
 // reading data from categories
 app.get('/categories', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM categories;');
+    const result = await db.query('SELECT name FROM categories;');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching categories:', error);
     res.status(500).json({ success: false });
   }
 });
+
+// TODO: reading data from biscuits and types and categories
+
+app.get('/entries', async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        entries.title,
+        entries.content,
+        entries.likes,
+        types.name AS type,
+        categories.name AS category
+      FROM entries
+      LEFT JOIN types ON entries.type_id = types.id
+      LEFT JOIN categories ON entries.category_id = categories.id;
+    `;
+
+    const result = await db.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching entries:', error);
+    res.status(500).json({ success: false });
+  }
+});
+
 
 
 // TODO: create new data in the entries table
