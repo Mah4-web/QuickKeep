@@ -44,4 +44,128 @@ export default function Entries() {
     fetchAllData();
   }, [BASE_URL]);
 
-  
+  function handleFilterChange(name, value) {
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  }
+
+  useEffect(() => {
+    let filtered = [...entries];
+
+    if (filters.search.trim() !== "") {
+      filtered = filtered.filter(
+        (entry) =>
+          entry.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+          entry.content.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+
+    if (filters.typeId) {
+      filtered = filtered.filter(
+        (entry) => entry.type_id.toString() === filters.typeId
+      );
+    }
+
+    if (filters.categoryId) {
+      filtered = filtered.filter(
+        (entry) => entry.category_id.toString() === filters.categoryId
+      );
+    }
+
+    setFilteredEntries(filtered);
+  }, [filters, entries]);
+
+  async function handleLike(id) {
+    try {
+      const entryToLike = entries.find((entry) => entry.id === id);
+      if (!entryToLike) return;
+
+      const updatedLikes = (entryToLike.likes || 0) + 1;
+
+      const res = await fetch(`${BASE_URL}/update-entry/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...entryToLike,
+          likes: updatedLikes,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to update likes");
+
+      setEntries((prevEntries) =>
+        prevEntries.map((entry) =>
+          entry.id === id ? { ...entry, likes: updatedLikes } : entry
+        )
+      );
+    } catch (error) {
+      console.error("Error updating likes:", error);
+    }
+  }
+
+  async function handleDelete(id) {
+    try {
+      const res = await fetch(`${BASE_URL}/delete-entry/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete entry");
+
+      setEntries((prevEntries) =>
+        prevEntries.filter((entry) => entry.id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+    }
+  }
+
+  function handleCopy(content) {
+    navigator.clipboard.writeText(content).then(() => {
+      alert("Content copied to clipboard!");
+    });
+  }
+
+  return (
+    <div className="entries-page">
+      <h1 className="entries-title">All Entries</h1>
+      <p className="entries-subtitle">🕵️‍♂️ Dig through your keeps like a detective!</p>
+
+      <Search
+        value={filters.search}
+        onChange={(value) => handleFilterChange("search", value)}
+      />
+
+      <div className="entries-filters">
+        <FilterDropdown
+          name="typeId"
+          value={filters.typeId}
+          options={types}
+          onChange={(value) => handleFilterChange("typeId", value)}
+          label="All Types"
+        />
+
+        <FilterDropdown
+          name="categoryId"
+          value={filters.categoryId}
+          options={categories}
+          onChange={(value) => handleFilterChange("categoryId", value)}
+          label="All Categories"
+        />
+      </div>
+
+      <p className="entries-count">
+        Showing {filteredEntries.length} of {entries.length} entries
+      </p>
+
+      <div className="entries-list">
+        {filteredEntries.map((entry) => (
+          <EntryCard
+            key={entry.id}
+            entry={entry}
+            onLike={handleLike}
+            onDelete={handleDelete}
+            onCopy={handleCopy}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
