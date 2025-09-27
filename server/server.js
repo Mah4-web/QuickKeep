@@ -7,10 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = 2026
+// From week 6 I learned environment variable and wanted to experiment here
+const SERVER_URL = process.env.SERVER_BASE_URL;
 
-app.listen(PORT, () => {
-    console.info(`Server is running in port $(PORT)`);
+app.listen(SERVER_URL, () => {
+    console.info(`Server is running at Base URL: ${SERVER_URL}`);
     });
 
     app.get("/", (_, res)=> {
