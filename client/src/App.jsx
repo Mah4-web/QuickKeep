@@ -3,9 +3,10 @@
 
 import Home from './Components/Home';
 import Entries from './Components/Entries';
-import AddEntry from './Components/Entries';
-import Navigation from './Components/Navigation';
-import NotFound from './Components/NotFound';
+import AddEntry from './Components/AddEntry';
+import Navigation from './Components/Navigation/Navigation';
+import Footer from './Components/Footer';
+import NotFound from './Components/NotFound/NotFound';
 
 import {Routes, Route} from "react-router";
 
@@ -22,7 +23,7 @@ export default function App(){
         <Route path="/categories/:category" element={<Entries />} />
         <Route path="*" element={<NotFound />} />
         </Routes>
-        
+        <Footer />
         </>
     )
 }

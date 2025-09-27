@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import { Link } from 'react-router';
-import '../App.css';
+import './NotFound.css';
 
 
 export default function NotFound() {

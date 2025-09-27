@@ -60,7 +60,7 @@ git remote add origin git@github.com:Mah4-web/QuickKeep.git
 ---
 
 10: set up & install -----tailwind, react-router, browser router, .gitignore for .env (server and client), package.json--- dev and module (server, client)
-Import all the folders in app.jsx
+Import all the files in app.jsx
 
 ---
 

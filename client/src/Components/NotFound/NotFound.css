@@ -1,0 +1,15 @@
+.notfound-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/404.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: flex-start; 
+    padding-top: 40px;
+}
