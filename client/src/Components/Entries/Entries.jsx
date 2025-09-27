@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import Search from "./Search/Search";
-import FilterDropdown from '../FilterDropdown/FilterDropdown';
-import EntryCard from '../EntryCard/EntryCard'; 
+import FilterDropdown from "../FilterDropdown/FilterDropdown";
+import EntryCard from "../EntryCard/EntryCard"; 
 
 
 export default function Entries() {
   const [entries, setEntries] = useState([]);
   const [filteredEntries, setFilteredEntries] = useState([]);
   const [types, setTypes] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);  
   const [filters, setFilters] = useState({
     search: "",
     typeId: "",
     categoryId: "",
   });
-
+  const { type, category } = useParams();
   const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function Entries() {
         setEntries(entriesData);
         setFilteredEntries(entriesData);
         setTypes(typesData);
-        setCategories(categoriesData);
+        setCategories(categoriesData);  
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -63,20 +64,28 @@ export default function Entries() {
       );
     }
 
-    if (filters.typeId) {
+    if (type) {
+      filtered = filtered.filter(
+        (entry) => entry.type_id.toString() === type
+      );
+    } else if (filters.typeId) {
       filtered = filtered.filter(
         (entry) => entry.type_id.toString() === filters.typeId
       );
     }
 
-    if (filters.categoryId) {
+    if (category) {
+      filtered = filtered.filter(
+        (entry) => entry.category_id.toString() === category
+      );
+    } else if (filters.categoryId) {
       filtered = filtered.filter(
         (entry) => entry.category_id.toString() === filters.categoryId
       );
     }
 
     setFilteredEntries(filtered);
-  }, [filters, entries]);
+  }, [filters, entries, type, category]);
 
   async function handleLike(id) {
     try {
@@ -145,6 +154,7 @@ export default function Entries() {
           label="All Types"
         />
 
+        {/* Filter Dropdown for Categories */}
         <FilterDropdown
           name="categoryId"
           value={filters.categoryId}
@@ -161,7 +171,7 @@ export default function Entries() {
       <div className="entries-list">
         {filteredEntries.map((entry) => (
           <EntryCard
-            key={entry.id}
+            key={entry.title}
             entry={entry}
             onLike={handleLike}
             onDelete={handleDelete}
@@ -172,4 +182,3 @@ export default function Entries() {
     </div>
   );
 }
-
