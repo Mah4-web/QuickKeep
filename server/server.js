@@ -8,10 +8,10 @@ app.use(express.json());
 app.use(cors());
 
 // From week 6 I learned environment variable and wanted to experiment here
-const SERVER_URL = process.env.SERVER_BASE_URL;
+const PORT = 2026;
 
-app.listen(SERVER_URL, () => {
-    console.info(`Server is running at Base URL: ${SERVER_URL}`);
+app.listen(PORT, () => {
+    console.info(`Server is running at Base URL: ${PORT}`);
     });
 
     app.get("/", (_, res)=> {
@@ -38,13 +38,13 @@ app.get("/entries", async (_, res) => {
 
 // TODO: create new data in the entries table
 
-app.post("/add-entries",(req, res) => {
+app.post("/add-entries", async(req, res) => {
   // const emtriedData = req.body;
   //destructure the body (alternative)
     const { title, content, likes, typeId, categoryId } = req.body;
 
     try {
-    const query = db.query(
+    const query = await db.query(
          //I tested my query in the SQL editor first to check syntax
         `INSERT INTO entries (title, content, likes, type_id, category_id) VALUES 
 ($1, $2, $3, $4, $5);`,
@@ -58,7 +58,7 @@ app.post("/add-entries",(req, res) => {
 });
 
 //TODO: delete an entry from the entries table
-app.delete("/delete-entry/:id", (req, res) => {
+app.delete("/delete-entry/:id", async (req, res) => {
     try {
     //the request has an object called params
     const paramsId = req.params.id;
@@ -67,7 +67,7 @@ app.delete("/delete-entry/:id", (req, res) => {
     // const { id } = req.params;
 
     //query the database to delete one entry
-    const query = db.query(`DELETE FROM entries WHERE id = $1 RETURNING *;`, [
+    const query = await db.query(`DELETE FROM entries WHERE id = $1 RETURNING *;`, [
         paramsId,
     ]);
     } catch (error) {
