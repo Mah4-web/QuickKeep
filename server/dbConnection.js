@@ -7,5 +7,5 @@ dotenv.config();
 // Alternative to above method
 
 export const db = new pg.Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.SERVER_BASE_URL,
 });
