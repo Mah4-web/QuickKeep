@@ -11,7 +11,7 @@ app.use(cors());
 const PORT = 2026;
 
 app.listen(PORT, () => {
-    console.info(`Server is running at Base URL: ${PORT}`);
+    console.info(`Server is running in port ${PORT}`);
     });
 
     app.get("/", (_, res)=> {
@@ -34,6 +34,18 @@ app.get("/entries", async (_, res) => {
     console.error("Error in the entries route", error);
     res.status(500).json({ success: false });
     }
+});
+
+// read data from types table
+
+app.get('/types', async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM types;');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching types:', error);
+    res.status(500).json({ success: false });
+  }
 });
 
 // TODO: create new data in the entries table
