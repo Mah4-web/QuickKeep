@@ -2,8 +2,8 @@
 //- All our components will be rendered in here
 
 import Home from './Components/Home';
-import Entries from './Components/Entries';
-import AddEntry from './Components/AddEntry';
+import Entries from './Components/Entries/Entries';
+import AddEntry from './Components/AddEntry/AddEntry';
 import Navigation from './Components/Navigation/Navigation';
 import Footer from './Components/Footer';
 import NotFound from './Components/NotFound/NotFound';
