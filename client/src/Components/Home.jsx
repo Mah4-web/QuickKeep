@@ -3,7 +3,7 @@ import EntryCard from "./EntryCard/EntryCard";
 import "../App.css";
 
 export default function Home() {
-    const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
+    const BASE_URL = 'https://quickkeep.onrender.com';
     const [entries, setEntries] = useState([]);
 
 //    I was trying to get data from my EntryCard, I started putting card here to get data and got errors, 

@@ -12,7 +12,7 @@ export default function AddEntry() {
     const [categories, setCategories] = useState([]);
     const [message, setMessage] = useState(null);
 
-    const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
+    const BASE_URL = 'https://quickkeep.onrender.com';
 
     useEffect(() => {
     async function fetchTypes() {
