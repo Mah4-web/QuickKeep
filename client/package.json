@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.2",
     "@tailwindcss/vite": "^4.1.13",
+    "fecha": "^4.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",

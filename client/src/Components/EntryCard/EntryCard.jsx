@@ -1,17 +1,19 @@
 
 import "./EntryCard.css";
+import fecha from "fecha";
 
 export default function EntryCard({ entry, onLike, onDelete, onCopy }) {
+    
+        
+
+  // Format the date using fecha
+    
+
     const createdDate = new Date(entry.created_at);
-    const formattedDate = isNaN(createdDate.getTime()) 
-        ? 'Unknown date' 
-        : createdDate.toLocaleString('en-GB', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
+
+    const formattedDate = isNaN(createdDate.getTime())
+    ? "Unknown date"
+    : fecha.format(createdDate, "D MMM YYYY, HH:mm");
     return (
     <div className="entry-card">
         <h3 className="entry-title">{entry.title}</h3>
