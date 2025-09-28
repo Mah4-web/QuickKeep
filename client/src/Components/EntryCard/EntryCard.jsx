@@ -1,5 +1,5 @@
 
-// import "./EntryCard.css";
+import "./EntryCard.css";
 
 export default function EntryCard({ entry, onLike, onDelete, onCopy }) {
     const createdDate = new Date(entry.created_at);
