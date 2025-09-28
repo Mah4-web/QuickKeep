@@ -1,4 +1,4 @@
-
+import "./FilterDropdown.css";
 export default function FilterDropdown({ name, value, options, onChange, label }) {
     return (
     <select

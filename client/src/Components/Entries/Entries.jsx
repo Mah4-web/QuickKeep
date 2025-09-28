@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import Search from "./Search/Search";
 import FilterDropdown from "../FilterDropdown/FilterDropdown";
 import EntryCard from "../EntryCard/EntryCard"; 
-
+import "./Entries.css";
 
 export default function Entries() {
   const [entries, setEntries] = useState([]);
