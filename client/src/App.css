@@ -8,3 +8,26 @@
     --main-font: "Georgia", serif ;
 }
 
+.home-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: var(--main-font);
+    color: #222;
+}
+
+.home-container h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.home-container p {
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+

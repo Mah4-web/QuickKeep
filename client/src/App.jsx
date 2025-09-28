@@ -22,8 +22,8 @@ export default function App(){
         <Route path="/" element={<Home />} />
         <Route path="/add-entry" element={<AddEntry />} />
         <Route path="/entries" element={<Entries />} />
-        <Route path="/entries/:type" element={<Entries />} />
-        <Route path="/categories/:category" element={<Entries />} />
+        <Route path="/entries/type/:type" element={<Entries />} />
+        <Route path="/entries/category/:category" element={<Entries />} />
         <Route path="jobs" element={<Jobs />} />
         <Route path="notes" element={<Notes />} />
         <Route path="urgent" element={<Urgent />} />

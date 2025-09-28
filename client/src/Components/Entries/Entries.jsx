@@ -63,27 +63,48 @@ export default function Entries() {
           entry.content.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
+// I did this but my console log was giving error and id error so after so many videos and googling I found that my code relies on id but to rely on type name strings when using the URL param
+// I have to change it and after few trial and errors it worked. So now I can use string names in the URL instead of numeric IDs.
+    // if (type) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.type_id.toString() === type
+    //   );
+    // } else if (filters.typeId) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.type_id.toString() === filters.typeId
+    //   );
+    // }
 
-    if (type) {
+    // if (category) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.category_id.toString() === category
+    //   );
+    // } else if (filters.categoryId) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.category_id.toString() === filters.categoryId
+    //   );
+    // }
+    // type filtering
+if (type) {
       filtered = filtered.filter(
-        (entry) => entry.type_id.toString() === type
+        (entry) => entry.type?.toLowerCase() === type.toLowerCase()
       );
     } else if (filters.typeId) {
       filtered = filtered.filter(
-        (entry) => entry.type_id.toString() === filters.typeId
+        (entry) => entry.type_id?.toString() === filters.typeId
       );
     }
 
+  // category filtering
     if (category) {
       filtered = filtered.filter(
-        (entry) => entry.category_id.toString() === category
+        (entry) => entry.category?.toLowerCase() === category.toLowerCase()
       );
     } else if (filters.categoryId) {
       filtered = filtered.filter(
-        (entry) => entry.category_id.toString() === filters.categoryId
+        (entry) => entry.category_id?.toString() === filters.categoryId
       );
     }
-
     setFilteredEntries(filtered);
   }, [filters, entries, type, category]);
 
@@ -171,6 +192,7 @@ export default function Entries() {
       <div className="entries-list">
         {filteredEntries.map((entry) => (
           <EntryCard
+          // here as well i did entry.id but i was getting error and i changed it to title
             key={entry.title}
             entry={entry}
             onLike={handleLike}
