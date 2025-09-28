@@ -19,34 +19,34 @@ app.listen(PORT, () => {
     });
 
   //TODO: read data from the entries table
-app.get("/entries", async (_, res) => {
-  //error handling
-  //try ... catch
-    try {
-    //query the database to send me the entries data
-    //I tested my query in the SQL editor first to check syntax
-    const data = await db.query(
-        `SELECT title, content, likes, type_id, category_id FROM entries;`
-    );
+// app.get("/entries", async (_, res) => {
+//   //error handling
+//   //try ... catch
+//     try {
+//     //query the database to send me the entries data
+//     //I tested my query in the SQL editor first to check syntax
+//     const data = await db.query(
+//         `SELECT title, content, likes, type_id, category_id FROM entries;`
+//     );
     
-    res.json(data.rows);
-    } catch (error) {
-    console.error("Error in the entries route", error);
-    res.status(500).json({ success: false });
-    }
-});
+//     res.json(data.rows);
+//     } catch (error) {
+//     console.error("Error in the entries route", error);
+//     res.status(500).json({ success: false });
+//     }
+// });
 
 // read data from types table
 
-// app.get('/types', async (req, res) => {
-//   try {
-//     const result = await db.query('SELECT name FROM types;');
-//     res.json(result.rows);
-//   } catch (error) {
-//     console.error('Error fetching types:', error);
-//     res.status(500).json({ success: false });
-//   }
-// });
+app.get('/types', async (req, res) => {
+  try {
+    const result = await db.query('SELECT name FROM types;');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching types:', error);
+    res.status(500).json({ success: false });
+  }
+});
 
 // reading data from categories
 app.get('/categories', async (req, res) => {
