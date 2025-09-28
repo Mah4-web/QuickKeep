@@ -84,6 +84,7 @@ export default function Entries() {
     //     (entry) => entry.category_id.toString() === filters.categoryId
     //   );
     // }
+    
     // type filtering
 if (type) {
       filtered = filtered.filter(

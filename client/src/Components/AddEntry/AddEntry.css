@@ -1,0 +1,66 @@
+
+
+.add-entry-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 2rem;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-entry-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.add-entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.add-entry-form label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #333;
+}
+
+.add-entry-form input,
+.add-entry-form textarea,
+.add-entry-form select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border 0.2s ease-in-out;
+}
+
+.add-entry-form input:focus,
+.add-entry-form textarea:focus,
+.add-entry-form select:focus {
+    border-color: #3498db;
+    outline: none;
+}
+
+.add-entry-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.add-entry-form button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.add-entry-form button:hover {
+    background-color: #2980b9;
+}

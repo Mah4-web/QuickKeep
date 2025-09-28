@@ -9,7 +9,7 @@ export default function Search({ value, onChange }) {
       <input
         type="text"
         name="search"
-        placeholder="Pick a type and category to find what you need!"
+        placeholder="Dive into your keeps — your treasure hunt starts here!"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="entries-search"
