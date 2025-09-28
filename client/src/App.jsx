@@ -7,6 +7,9 @@ import AddEntry from './Components/AddEntry/AddEntry';
 import Navigation from './Components/Navigation/Navigation';
 import Footer from './Components/Footer';
 import NotFound from './Components/NotFound/NotFound';
+import Jobs from "./Components/Jobs";
+import Notes from "./Components/Notes";
+import Urgent from "./Components/Urgent";
 
 import {Routes, Route} from "react-router";
 
@@ -21,8 +24,12 @@ export default function App(){
         <Route path="/entries" element={<Entries />} />
         <Route path="/entries/:type" element={<Entries />} />
         <Route path="/categories/:category" element={<Entries />} />
+        <Route path="jobs" element={<Jobs />} />
+        <Route path="notes" element={<Notes />} />
+        <Route path="urgent" element={<Urgent />} />
         <Route path="*" element={<NotFound />} />
         </Routes>
+
         <Footer />
         </>
     )
