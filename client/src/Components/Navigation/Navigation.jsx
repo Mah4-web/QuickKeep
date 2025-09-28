@@ -10,9 +10,6 @@ export default function Navigation() {
         <Link to="/">Home</Link>
         <Link to="/add-entry">Add Entry</Link>
         <Link to="/entries">All Entries</Link>
-        <Link to="/jobs">Jobs</Link>
-        <Link to="/notes">Notes</Link>
-        <Link to="/urgent">Urgent</Link>
         </nav>
         </header>
     
