@@ -12,8 +12,8 @@ export default function Entries() {
   const [categories, setCategories] = useState([]);  
   const [filters, setFilters] = useState({
     search: "",
-    typeId: "",
-    categoryId: "",
+    typeName: "",
+    categoryName: "",
   });
   const { type, category } = useParams();
   const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
@@ -21,22 +21,22 @@ export default function Entries() {
   useEffect(() => {
     async function fetchAllData() {
       try {
-        // Fetch entries
+        // Fetching entries
         const entriesRes = await fetch(`${BASE_URL}/entries`);
         if (!entriesRes.ok) throw new Error("Failed to fetch entries");
         const entriesData = await entriesRes.json();
 
-        // Fetch types
+        // Fetching types
         const typesRes = await fetch(`${BASE_URL}/types`);
         if (!typesRes.ok) throw new Error("Failed to fetch types");
         const typesData = await typesRes.json();
 
-        // Fetch categories
+        // Fetching categories
         const categoriesRes = await fetch(`${BASE_URL}/categories`);
         if (!categoriesRes.ok) throw new Error("Failed to fetch categories");
         const categoriesData = await categoriesRes.json();
 
-        // Update state
+        // Updating state
         setEntries(entriesData);
         setFilteredEntries(entriesData);
         setTypes(typesData);
@@ -49,6 +49,7 @@ export default function Entries() {
     fetchAllData();
   }, [BASE_URL]);
 
+  // Handle dropdown or search input changes
   function handleFilterChange(name, value) {
     setFilters((prev) => ({ ...prev, [name]: value }));
   }
@@ -56,6 +57,7 @@ export default function Entries() {
   useEffect(() => {
     let filtered = [...entries];
 
+    // Search filter on title or content
     if (filters.search.trim() !== "") {
       filtered = filtered.filter(
         (entry) =>
@@ -84,40 +86,41 @@ export default function Entries() {
     //     (entry) => entry.category_id.toString() === filters.categoryId
     //   );
     // }
-    
-    // type filtering
-if (type) {
+    // Filtering by type name from dropdown filter
+    if (type) {
       filtered = filtered.filter(
         (entry) => entry.type?.toLowerCase() === type.toLowerCase()
       );
-    } else if (filters.typeId) {
+    } else if (filters.typeName) {
       filtered = filtered.filter(
-        (entry) => entry.type_id?.toString() === filters.typeId
+        (entry) => entry.type?.toLowerCase() === filters.typeName.toLowerCase()
       );
     }
 
-  // category filtering
+    // Filtering by category name from dropdown filter
     if (category) {
       filtered = filtered.filter(
         (entry) => entry.category?.toLowerCase() === category.toLowerCase()
       );
-    } else if (filters.categoryId) {
+    } else if (filters.categoryName) {
       filtered = filtered.filter(
-        (entry) => entry.category_id?.toString() === filters.categoryId
+        (entry) => entry.category?.toLowerCase() === filters.categoryName.toLowerCase()
       );
     }
+
     setFilteredEntries(filtered);
   }, [filters, entries, type, category]);
 
-  async function handleLike(id) {
+  // Like handler using entry title as key (no id)
+  async function handleLike(title) {
     try {
-      const entryToLike = entries.find((entry) => entry.id === id);
+      const entryToLike = entries.find((entry) => entry.title === title);
       if (!entryToLike) return;
 
       const updatedLikes = (entryToLike.likes || 0) + 1;
 
-      const res = await fetch(`${BASE_URL}/update-entry/${id}`, {
-        method: "PUT",
+      const res = await fetch(`${BASE_URL}/update-entry-by-title/${title}`, {
+        method: "add-entries",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...entryToLike,
@@ -128,7 +131,7 @@ if (type) {
 
       setEntries((prevEntries) =>
         prevEntries.map((entry) =>
-          entry.id === id ? { ...entry, likes: updatedLikes } : entry
+          entry.title === title ? { ...entry, likes: updatedLikes } : entry
         )
       );
     } catch (error) {
@@ -136,15 +139,16 @@ if (type) {
     }
   }
 
-  async function handleDelete(id) {
+  // Delete handler using title as key
+  async function handleDelete(title) {
     try {
-      const res = await fetch(`${BASE_URL}/delete-entry/${id}`, {
-        method: "DELETE",
+      const res = await fetch(`${BASE_URL}/delete-entry-by-title/${title}`, {
+        method: "delete-entries",
       });
       if (!res.ok) throw new Error("Failed to delete entry");
 
       setEntries((prevEntries) =>
-        prevEntries.filter((entry) => entry.id !== id)
+        prevEntries.filter((entry) => entry.title !== title)
       );
     } catch (error) {
       console.error("Error deleting entry:", error);
@@ -169,19 +173,18 @@ if (type) {
 
       <div className="entries-filters">
         <FilterDropdown
-          name="typeId"
-          value={filters.typeId}
+          name="typeName"
+          value={filters.typeName}
           options={types}
-          onChange={(value) => handleFilterChange("typeId", value)}
+          onChange={(value) => handleFilterChange("typeName", value)}
           label="All Types"
         />
 
-        {/* Filter Dropdown for Categories */}
         <FilterDropdown
-          name="categoryId"
-          value={filters.categoryId}
+          name="categoryName"
+          value={filters.categoryName}
           options={categories}
-          onChange={(value) => handleFilterChange("categoryId", value)}
+          onChange={(value) => handleFilterChange("categoryName", value)}
           label="All Categories"
         />
       </div>
@@ -193,8 +196,7 @@ if (type) {
       <div className="entries-list">
         {filteredEntries.map((entry) => (
           <EntryCard
-          // here as well i did entry.id but i was getting error and i changed it to title
-            key={entry.title}
+            key={entry.title} // Using title as key 
             entry={entry}
             onLike={handleLike}
             onDelete={handleDelete}

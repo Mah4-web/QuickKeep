@@ -38,15 +38,15 @@ app.get("/entries", async (_, res) => {
 
 // read data from types table
 
-app.get('/types', async (req, res) => {
-  try {
-    const result = await db.query('SELECT name FROM types;');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching types:', error);
-    res.status(500).json({ success: false });
-  }
-});
+// app.get('/types', async (req, res) => {
+//   try {
+//     const result = await db.query('SELECT name FROM types;');
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error('Error fetching types:', error);
+//     res.status(500).json({ success: false });
+//   }
+// });
 
 // reading data from categories
 app.get('/categories', async (req, res) => {
@@ -59,7 +59,7 @@ app.get('/categories', async (req, res) => {
   }
 });
 
-// TODO: reading data from biscuits and types and categories
+// TODO: reading data from entries and types and categories
 
 app.get('/entries', async (req, res) => {
   try {
@@ -90,7 +90,7 @@ app.get('/entries', async (req, res) => {
 app.post("/add-entries", async(req, res) => {
   // const emtriedData = req.body;
   //destructure the body (alternative)
-    const { title, content, likes, typeId, categoryId } = req.body;
+    const { title, content, likes, type_id, category_id } = req.body;
 
     try {
     const query = await db.query(
@@ -138,8 +138,8 @@ app.put("/update-entry/:id", async(req, res) => {
         newEntry.title,
         newEntry.content,
         newEntry.likes,
-        newEntry.typeId,
-        newEntry.categoryId,
+        newEntry.type_id,
+        newEntry.category_id,
         paramsId,
         ]
     );

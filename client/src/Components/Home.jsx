@@ -6,7 +6,7 @@ export default function Home() {
     const BASE_URL = import.meta.env.VITE_SERVER_BASE_URL;
     const [entries, setEntries] = useState([]);
 
-// I was trying to get data from my EntryCard, I started putting card here to get data and got errors, 
+//    I was trying to get data from my EntryCard, I started putting card here to get data and got errors, 
             // I did not realise I am getting data from server directly. Silly me
     
     useEffect(() => {
@@ -30,16 +30,17 @@ export default function Home() {
     fetchEntries();
     }, [BASE_URL]);
 
-    function handleLike(id) {
+  // Use title instead of id as identifier
+    function handleLike(title) {
     setEntries((prev) =>
         prev.map((entry) =>
-        entry.id === id ? { ...entry, likes: (entry.likes || 0) + 1 } : entry
+        entry.title === title ? { ...entry, likes: (entry.likes || 0) + 1 } : entry
         )
     );
     }
 
-    function handleDelete(id) {
-    setEntries((prev) => prev.filter((entry) => entry.id !== id));
+    function handleDelete(title) {
+    setEntries((prev) => prev.filter((entry) => entry.title !== title));
     }
 
     function handleCopy(content) {
@@ -57,9 +58,9 @@ export default function Home() {
         {entries.length === 0 ? (
             <p>No recent entries found.</p>
         ) : (
-        entries.map((entry) => (
+            entries.map((entry) => (
             <EntryCard
-                key={entry.title}
+              key={entry.title} // using title as key
                 entry={entry}
                 onLike={handleLike}
                 onDelete={handleDelete}
