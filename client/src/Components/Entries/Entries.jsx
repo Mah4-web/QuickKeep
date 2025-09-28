@@ -196,7 +196,7 @@ export default function Entries() {
       </p>
 
       <div className="entries-list">
-        console.log{filteredEntries.map((entry) => (
+          {filteredEntries.map((entry) => (
           <EntryCard
             key={entry.id} 
             entry={entry}
