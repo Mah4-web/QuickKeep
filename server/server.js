@@ -88,7 +88,7 @@ app.get('/entries', async (req, res) => {
 // TODO: create new data in the entries table
 
 app.post("/add-entries", async(req, res) => {
-  // const emtriedData = req.body;
+  // const entriedData = req.body;
   //destructure the body (alternative)
     const { title, content, likes, type_id, category_id } = req.body;
 
@@ -97,7 +97,7 @@ app.post("/add-entries", async(req, res) => {
          //I tested my query in the SQL editor first to check syntax
         `INSERT INTO entries (title, content, likes, type_id, category_id) VALUES 
 ($1, $2, $3, $4, $5);`,
-        [title, content, likes, typeId, categoryId]
+        [title, content, likes, type_id, category_id]
     );
     res.status(200).json({ success: true });
     } catch (error) {

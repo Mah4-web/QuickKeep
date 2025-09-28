@@ -120,7 +120,7 @@ export default function Entries() {
       const updatedLikes = (entryToLike.likes || 0) + 1;
 
       const res = await fetch(`${BASE_URL}/update-entry-by-title/${title}`, {
-        method: "add-entries",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...entryToLike,
@@ -143,7 +143,7 @@ export default function Entries() {
   async function handleDelete(title) {
     try {
       const res = await fetch(`${BASE_URL}/delete-entry-by-title/${title}`, {
-        method: "delete-entries",
+        method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete entry");
 
