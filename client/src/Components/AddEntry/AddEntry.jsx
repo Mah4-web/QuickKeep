@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./AddEntry.css";
 
 export default function AddEntry() {
+    const BASE_URL = 'https://quickkeep.onrender.com';
     const [formValues, setFormValues] = useState({
     title: "",
     content: "",
@@ -12,8 +13,6 @@ export default function AddEntry() {
     const [categories, setCategories] = useState([]);
     const [message, setMessage] = useState(null);
 
-    const BASE_URL = 'https://quickkeep.onrender.com';
-
     useEffect(() => {
     async function fetchTypes() {
         try {
@@ -22,10 +21,9 @@ export default function AddEntry() {
         const data = await res.json();
         setTypes(data);
         } catch (error) {
-        console.error(error);
+        console.error("Error:", error);
         }
     }
-
     async function fetchCategories() {
         try {
         const res = await fetch(`${BASE_URL}/categories`);
@@ -33,7 +31,7 @@ export default function AddEntry() {
         const data = await res.json();
         setCategories(data);
         } catch (error) {
-        console.error(error);
+        console.error("Error:", error);
         }
     }
 
@@ -58,17 +56,16 @@ export default function AddEntry() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-        title: formValues.title,
-        content: formValues.content,
-        type_id: Number(formValues.typeId),       
-        category_id: Number(formValues.categoryId), 
+            title: formValues.title,
+            content: formValues.content,
+            likes: 0,
+            type_id: Number(formValues.typeId),
+            category_id: Number(formValues.categoryId),
         }),
         });
 
-        if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to add entry");
-        }
+        const result = await res.json();
+        if (!res.ok) throw new Error(result.error || "Failed to add entry");
 
         setMessage("Entry added successfully!");
         setFormValues({
@@ -132,7 +129,7 @@ export default function AddEntry() {
             required
         >
             <option value="">-- Select a Category --</option>
-          {/* This cat don't meow :) it's short for category, {categories.map((cat), since I am tired I need some fun */}
+             {/* This cat don't meow :) it's short for category, {categories.map((cat), since I am tired I need some fun */}
             {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -144,7 +141,11 @@ export default function AddEntry() {
         </form>
 
         {message && (
-        <p className={message.startsWith("Error") ? "error-message" : "success-message"}>
+        <p
+            className={
+            message.startsWith("Error") ? "error-message" : "success-message"
+            }
+        >
             {message}
         </p>
         )}

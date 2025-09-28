@@ -4,12 +4,12 @@ export default function FilterDropdown({ name, value, options, onChange, label }
     <select
         name={name}
         value={value}
-        onChange={(e) => onChange(name, e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         className="entries-select"
     >
         <option value="">{label}</option>
         {options.map((opt) => (
-        <option key={opt.name} value={opt.name}>
+        <option key={opt.id} value={opt.id}>
             {opt.name}
         </option>
         ))}

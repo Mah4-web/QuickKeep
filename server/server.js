@@ -40,7 +40,7 @@ app.listen(PORT, () => {
 
 app.get('/types', async (req, res) => {
   try {
-    const result = await db.query('SELECT name FROM types;');
+    const result = await db.query('SELECT id, name FROM types;');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching types:', error);
@@ -51,7 +51,7 @@ app.get('/types', async (req, res) => {
 // reading data from categories
 app.get('/categories', async (req, res) => {
   try {
-    const result = await db.query('SELECT name FROM categories;');
+    const result = await db.query('SELECT id, name FROM categories;');
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching categories:', error);
@@ -65,14 +65,17 @@ app.get('/entries', async (req, res) => {
   try {
     const query = `
       SELECT
+        entries.id,
         entries.title,
         entries.content,
         entries.likes,
+        entries.created_at,
         types.name AS type,
         categories.name AS category
       FROM entries
       LEFT JOIN types ON entries.type_id = types.id
       LEFT JOIN categories ON entries.category_id = categories.id;
+      ORDER BY entries.created_at DESC;
     `;
 
     const result = await db.query(query);
@@ -90,7 +93,7 @@ app.get('/entries', async (req, res) => {
 app.post("/add-entries", async(req, res) => {
   // const entriedData = req.body;
   //destructure the body (alternative)
-    const { title, content, likes, type_id, category_id } = req.body;
+    const {  title, content, likes, type_id, category_id } = req.body;
 
     try {
     const query = await db.query(
@@ -135,6 +138,7 @@ app.put("/update-entry/:id", async(req, res) => {
     const query = await db.query(
       `UPDATE entries SET title = $1, content= $2, likes = $3, type_id = $4, category_id = $5 WHERE id = $6 RETURNING *;`,
         [
+        newEntry.id,
         newEntry.title,
         newEntry.content,
         newEntry.likes,

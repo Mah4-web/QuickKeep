@@ -65,73 +65,75 @@ export default function Entries() {
           entry.content.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
-// I did this but my console log was giving error and id error so after so many videos and googling I found that my code relies on id but to rely on type name strings when using the URL param
-// I have to change it and after few trial and errors it worked. So now I can use string names in the URL instead of numeric IDs.
-    // if (type) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.type_id.toString() === type
-    //   );
-    // } else if (filters.typeId) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.type_id.toString() === filters.typeId
-    //   );
-    // }
 
-    // if (category) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.category_id.toString() === category
-    //   );
-    // } else if (filters.categoryId) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.category_id.toString() === filters.categoryId
-    //   );
-    // }
-    // Filtering by type name from dropdown filter
     if (type) {
       filtered = filtered.filter(
-        (entry) => entry.type?.toLowerCase() === type.toLowerCase()
+        (entry) => entry.type_id.toString() === type
       );
-    } else if (filters.typeName) {
+    } else if (filters.typeId) {
       filtered = filtered.filter(
-        (entry) => entry.type?.toLowerCase() === filters.typeName.toLowerCase()
+        (entry) => entry.type_id.toString() === filters.typeId
       );
     }
 
-    // Filtering by category name from dropdown filter
     if (category) {
       filtered = filtered.filter(
-        (entry) => entry.category?.toLowerCase() === category.toLowerCase()
+        (entry) => entry.category_id.toString() === category
       );
-    } else if (filters.categoryName) {
+    } else if (filters.categoryId) {
       filtered = filtered.filter(
-        (entry) => entry.category?.toLowerCase() === filters.categoryName.toLowerCase()
+        (entry) => entry.category_id.toString() === filters.categoryId
       );
     }
+    // Filtering by type name from dropdown filter
+    // if (type) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.type?.toLowerCase() === type.toLowerCase()
+    //   );
+    // } else if (filters.typeName) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.type?.toLowerCase() === filters.typeName.toLowerCase()
+    //   );
+    // }
+
+    // Filtering by category name from dropdown filter
+    // if (category) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.category?.toLowerCase() === category.toLowerCase()
+    //   );
+    // } else if (filters.categoryName) {
+    //   filtered = filtered.filter(
+    //     (entry) => entry.category?.toLowerCase() === filters.categoryName.toLowerCase()
+    //   );
+    // }
 
     setFilteredEntries(filtered);
   }, [filters, entries, type, category]);
 
-  // Like handler using entry title as key (no id)
-  async function handleLike(title) {
+  
+  async function handleLike(id) {
     try {
-      const entryToLike = entries.find((entry) => entry.title === title);
+      const entryToLike = entries.find((entry) => entry.id === id);
       if (!entryToLike) return;
 
       const updatedLikes = (entryToLike.likes || 0) + 1;
 
-      const res = await fetch(`${BASE_URL}/update-entry-by-title/${title}`, {
+      const res = await fetch(`${BASE_URL}/update-entry-by-title/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...entryToLike,
+          title: entryToLike.title,
+          content: entryToLike.content,
           likes: updatedLikes,
+          type_id: entryToLike.type_id,
+          category_id: entryToLike.category_id,
         }),
       });
       if (!res.ok) throw new Error("Failed to update likes");
 
       setEntries((prevEntries) =>
         prevEntries.map((entry) =>
-          entry.title === title ? { ...entry, likes: updatedLikes } : entry
+          entry.id === id ? { ...entry, likes: updatedLikes } : entry
         )
       );
     } catch (error) {
@@ -139,16 +141,16 @@ export default function Entries() {
     }
   }
 
-  // Delete handler using title as key
-  async function handleDelete(title) {
+  
+  async function handleDelete(id) {
     try {
-      const res = await fetch(`${BASE_URL}/delete-entry-by-title/${title}`, {
+      const res = await fetch(`${BASE_URL}/delete-entry-by-id/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete entry");
 
       setEntries((prevEntries) =>
-        prevEntries.filter((entry) => entry.title !== title)
+        prevEntries.filter((entry) => entry.id !== id)
       );
     } catch (error) {
       console.error("Error deleting entry:", error);
@@ -173,18 +175,18 @@ export default function Entries() {
 
       <div className="entries-filters">
         <FilterDropdown
-          name="typeName"
-          value={filters.typeName}
+          name="typeId"
+          value={filters.typeId}
           options={types}
-          onChange={(value) => handleFilterChange("typeName", value)}
+          onChange={handleFilterChange}
           label="All Types"
         />
 
         <FilterDropdown
-          name="categoryName"
-          value={filters.categoryName}
+          name="categoryId"
+          value={filters.categoryId}
           options={categories}
-          onChange={(value) => handleFilterChange("categoryName", value)}
+          onChange={handleFilterChange}
           label="All Categories"
         />
       </div>
@@ -194,13 +196,13 @@ export default function Entries() {
       </p>
 
       <div className="entries-list">
-        {filteredEntries.map((entry) => (
+        console.log{filteredEntries.map((entry) => (
           <EntryCard
-            key={entry.title} // Using title as key 
+            key={entry.id} 
             entry={entry}
-            onLike={handleLike}
-            onDelete={handleDelete}
-            onCopy={handleCopy}
+            onLike={() => handleLike(entry.id)}
+            onDelete={() => handleDelete(entry.id)}
+            onCopy={() => handleCopy(entry.content)}
           />
         ))}
       </div>
