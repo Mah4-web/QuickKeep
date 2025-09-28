@@ -1,0 +1,112 @@
+
+.entries-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem; 
+    padding: 2rem 1rem; 
+    background-color: white;
+    box-sizing: border-box; 
+}
+
+
+.entry-card {
+    background-color: #fafafa; 
+    border-radius: 8px; 
+    padding: 1.5rem; 
+    text-align: center; 
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.2s ease-in-out; 
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+    .entry-card:hover {
+    transform: translateY(-4px); 
+    }
+}
+
+
+.entry-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem; 
+}
+
+
+.entry-created {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+
+.entry-content {
+    margin-bottom: 1rem;
+    white-space: pre-wrap; 
+    font-size: 0.95rem;
+}
+
+
+.entry-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center; 
+    margin-top: 1rem;
+}
+
+
+.entry-btn {
+    cursor: pointer;
+    border: none;
+    padding: 0.4rem 0.6rem; 
+    font-size: 0.9rem; 
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+
+.like-btn {
+    background-color: #ffe0e0;
+    color: #e63946;
+}
+
+.like-btn:hover {
+    background-color: #ffb3b3;
+}
+
+
+
+.copy-btn {
+    background-color: #e0f7ff;
+    color: #0288d1;
+}
+
+.copy-btn:hover {
+    background-color: #b3e5fc;
+}
+
+
+.delete-btn {
+    background-color: #f8d7da;
+    color: #a71d2a;
+}
+
+.delete-btn:hover {
+    background-color: #f5b7b1;
+}
+
+
+@media (max-width: 1200px) {
+    .entries-list {
+    grid-template-columns: repeat(2, 1fr); 
+    }
+}
+
+@media (max-width: 768px) {
+    .entries-list {
+    grid-template-columns: 1fr; 
+    }
+}
