@@ -59,8 +59,8 @@ export default function AddEntry() {
             title: formValues.title,
             content: formValues.content,
             likes: 0,
-            type_id: Number(formValues.typeId),
-            category_id: Number(formValues.categoryId),
+            typeId: Number(formValues.typeId),
+            categoryId: Number(formValues.categoryId),
         }),
         });
 
