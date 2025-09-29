@@ -19,34 +19,51 @@ app.listen(PORT, () => {
     });
 
   //TODO: read data from the entries table
-// app.get("/entries", async (_, res) => {
-//   //error handling
-//   //try ... catch
-//     try {
-//     //query the database to send me the entries data
-//     //I tested my query in the SQL editor first to check syntax
-//     const data = await db.query(
-//         `SELECT title, content, likes, type_id, category_id FROM entries;`
-//     );
+app.get("/entries", async (_, res) => {
+  //error handling
+  //try ... catch
+    try {
+    //query the database to send me the entries data
+    //I tested my query in the SQL editor first to check syntax
+    const data = await db.query(
+        `SELECT id, title, content, likes, type_id, category_id FROM entries;`
+    );
     
-//     res.json(data.rows);
-//     } catch (error) {
-//     console.error("Error in the entries route", error);
-//     res.status(500).json({ success: false });
-//     }
-// });
+    res.json(data.rows);
+    } catch (error) {
+    console.error("Error in the entries route", error);
+    res.status(500).json({ success: false });
+    }
+});
 
 // read data from types table
 
-app.get('/types', async (req, res) => {
-  try {
-    const result = await db.query('SELECT id, name FROM types;');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching types:', error);
-    res.status(500).json({ success: false });
-  }
-});
+// app.get('/types', async (req, res) => {
+//   try {
+//     const result = await db.query('SELECT id, name FROM types;');
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error('Error fetching types:', error);
+//     // res.status(500).json({ success: false });
+//   res.status(500).json({ success: false, error: error.message, stack: error.stack });
+//   }
+// });
+// app.get("/entries", async (req, res, next) => {
+//   try {
+//     const result = await db.query(
+//       `SELECT id, title, content, likes, type_id, category_id FROM entries;`
+//     );
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error("Error in /entries route:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//       stack: error.stack,
+//     });
+//   }
+// });
+
 
 // reading data from categories
 app.get('/categories', async (req, res) => {
@@ -69,20 +86,17 @@ app.get('/entries', async (req, res) => {
         entries.title,
         entries.content,
         entries.likes,
-        entries.created_at,
         types.name AS type,
         categories.name AS category
       FROM entries
       LEFT JOIN types ON entries.type_id = types.id
       LEFT JOIN categories ON entries.category_id = categories.id;
-      ORDER BY entries.created_at DESC;
     `;
 
     const result = await db.query(query);
     res.json(result.rows);
   } catch (error) {
     console.error('Error fetching entries:', error);
-    res.status(500).json({ success: false });
   }
 });
 
@@ -138,7 +152,6 @@ app.put("/update-entry/:id", async(req, res) => {
     const query = await db.query(
       `UPDATE entries SET title = $1, content= $2, likes = $3, type_id = $4, category_id = $5 WHERE id = $6 RETURNING *;`,
         [
-        newEntry.id,
         newEntry.title,
         newEntry.content,
         newEntry.likes,
