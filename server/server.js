@@ -104,7 +104,7 @@ app.get('/entries', async (req, res) => {
 
 // TODO: create new data in the entries table
 
-app.post("/add-entries", async(req, res) => {
+app.post("/entries", async(req, res) => {
   // const entriedData = req.body;
   //destructure the body (alternative)
     const {  title, content, likes, typeId, categoryId } = req.body;
