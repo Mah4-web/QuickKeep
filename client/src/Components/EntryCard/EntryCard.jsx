@@ -1,6 +1,7 @@
 import "./EntryCard.css";
 
 export default function EntryCard({ entry, onLike, onDelete, onCopy }) {
+   
     return (
     <div className="entry-card">
         <h3 className="entry-title">{entry.title}</h3>

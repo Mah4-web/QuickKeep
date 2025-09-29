@@ -2,63 +2,69 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Search from "./Search/Search";
 import FilterDropdown from "../FilterDropdown/FilterDropdown";
-import EntryCard from "../EntryCard/EntryCard"; 
+import EntryCard from "../EntryCard/EntryCard";
 import "./Entries.css";
 
 export default function Entries() {
   const [entries, setEntries] = useState([]);
   const [filteredEntries, setFilteredEntries] = useState([]);
   const [types, setTypes] = useState([]);
-  const [categories, setCategories] = useState([]);  
+  const [categories, setCategories] = useState([]);
   const [filters, setFilters] = useState({
     search: "",
-    typeName: "",
-    categoryName: "",
+    typeId: "",
+    categoryId: "",
   });
-  const { type, category } = useParams();
-  const BASE_URL = 'https://quickkeep.onrender.com';
 
-  useEffect(() => {
+  const { type, category } = useParams();
+  const BASE_URL = "https://quickkeep.onrender.com";
+
     async function fetchAllData() {
       try {
-        // Fetching entries
         const entriesRes = await fetch(`${BASE_URL}/entries`);
-        if (!entriesRes.ok) throw new Error("Failed to fetch entries");
         const entriesData = await entriesRes.json();
-
-        // Fetching types
-        const typesRes = await fetch(`${BASE_URL}/types`);
-        if (!typesRes.ok) throw new Error("Failed to fetch types");
-        const typesData = await typesRes.json();
-
-        // Fetching categories
-        const categoriesRes = await fetch(`${BASE_URL}/categories`);
-        if (!categoriesRes.ok) throw new Error("Failed to fetch categories");
-        const categoriesData = await categoriesRes.json();
-
-        // Updating state
         setEntries(entriesData);
         setFilteredEntries(entriesData);
-        setTypes(typesData);
-        setCategories(categoriesData);  
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+        const typesRes = await fetch(`${BASE_URL}/types`);
+        const typesData = await typesRes.json();
+        const sortedTypes = typesData.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setTypes(sortedTypes);
+
+        const categoriesRes = await fetch(`${BASE_URL}/categories`);
+        const categoriesData = await categoriesRes.json();
+        const sortedCategories = categoriesData.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+        setCategories(sortedCategories);
+      } catch (err) {
+        console.error("Error fetching data:", err);
       }
     }
-
+    useEffect(()=> {
     fetchAllData();
-  }, [BASE_URL]);
+     const interval = setInterval(() => {
+    fetchAllData();
+  }, 10000); // fetch every 10 seconds
 
-  // Handle dropdown or search input changes
-  function handleFilterChange(name, value) {
-    setFilters((prev) => ({ ...prev, [name]: value }));
+  return () => clearInterval(interval); 
+  }, []);
+
+   function handleFilterChange(name, value) {
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+      ...(name === "typeId" ? { categoryId: "" } : {}),
+    }));
   }
 
   useEffect(() => {
     let filtered = [...entries];
 
-    // Search filter on title or content
-    if (filters.search.trim() !== "") {
+    // Search filter
+    if (filters.search.trim()) {
       filtered = filtered.filter(
         (entry) =>
           entry.title.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -66,94 +72,60 @@ export default function Entries() {
       );
     }
 
+    // URL param or dropdown filter for type
     if (type) {
       filtered = filtered.filter(
         (entry) => entry.type_id.toString() === type
       );
     } else if (filters.typeId) {
       filtered = filtered.filter(
-        (entry) => entry.type_id.toString() === filters.typeId
+        (entry) => entry.type_id === Number(filters.typeId)
       );
     }
 
+    // URL param or dropdown filter for category
     if (category) {
       filtered = filtered.filter(
         (entry) => entry.category_id.toString() === category
       );
     } else if (filters.categoryId) {
       filtered = filtered.filter(
-        (entry) => entry.category_id.toString() === filters.categoryId
+        (entry) => entry.category_id === Number(filters.categoryId)
       );
     }
-    // Filtering by type name from dropdown filter
-    // if (type) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.type?.toLowerCase() === type.toLowerCase()
-    //   );
-    // } else if (filters.typeName) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.type?.toLowerCase() === filters.typeName.toLowerCase()
-    //   );
-    // }
-
-    // // Filtering by category name from dropdown filter
-    // if (category) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.category?.toLowerCase() === category.toLowerCase()
-    //   );
-    // } else if (filters.categoryName) {
-    //   filtered = filtered.filter(
-    //     (entry) => entry.category?.toLowerCase() === filters.categoryName.toLowerCase()
-    //   );
-    // }
-
-    if (filters.typeId) {
-  filtered = filtered.filter(
-    (entry) => entry.type_id === Number(filters.typeId)
-  );
-}
-
-if (filters.categoryId) {
-  filtered = filtered.filter(
-    (entry) => entry.category_id === Number(filters.categoryId)
-  );
-}
 
     setFilteredEntries(filtered);
   }, [filters, entries, type, category]);
 
-  
   async function handleLike(id) {
-    try {
-      const entryToLike = entries.find((entry) => entry.id === id);
-      if (!entryToLike) return;
+    const entry = entries.find((e) => e.id === id);
+    if (!entry) return;
 
-      const updatedLikes = (entryToLike.likes || 0) + 1;
+    try {
+      const updatedLikes = (entry.likes || 0) + 1;
 
       const res = await fetch(`${BASE_URL}/update-entry-by-title/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: entryToLike.title,
-          content: entryToLike.content,
+          title: entry.title,
+          content: entry.content,
           likes: updatedLikes,
-          type_id: entryToLike.type_id,
-          category_id: entryToLike.category_id,
+          type_id: entry.typeId,
+          category_id: entry.categoryId,
         }),
       });
+
       if (!res.ok) throw new Error("Failed to update likes");
 
-      setEntries((prevEntries) =>
-        prevEntries.map((entry) =>
-          entry.id === id ? { ...entry, likes: updatedLikes } : entry
-        )
+      setEntries((prev) =>
+        prev.map((e) => (e.id === id ? { ...e, likes: updatedLikes } : e))
       );
-    } catch (error) {
-      console.error("Error updating likes:", error);
+    } catch (err) {
+      console.error("Error updating likes:", err);
     }
   }
 
-  
   async function handleDelete(id) {
     try {
       const res = await fetch(`${BASE_URL}/delete-entry-by-id/${id}`, {
@@ -161,11 +133,9 @@ if (filters.categoryId) {
       });
       if (!res.ok) throw new Error("Failed to delete entry");
 
-      setEntries((prevEntries) =>
-        prevEntries.filter((entry) => entry.id !== id)
-      );
-    } catch (error) {
-      console.error("Error deleting entry:", error);
+      setEntries((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error("Error deleting entry:", err);
     }
   }
 
@@ -174,6 +144,9 @@ if (filters.categoryId) {
       alert("Content copied to clipboard!");
     });
   }
+    const filteredCategories = filters.typeId
+    ? categories.filter((cat) => cat.type_id === Number(filters.typeId))
+    : categories;
 
   return (
     <div className="entries-page">
@@ -182,7 +155,7 @@ if (filters.categoryId) {
 
       <Search
         value={filters.search}
-        onChange={(value) => handleFilterChange("search", value)}
+        onChange={(val) => handleFilterChange("search", val)}
       />
 
       <div className="entries-filters">
@@ -197,7 +170,7 @@ if (filters.categoryId) {
         <FilterDropdown
           name="categoryId"
           value={filters.categoryId}
-          options={categories}
+          options={filteredCategories}
           onChange={handleFilterChange}
           label="All Categories"
         />
@@ -208,9 +181,9 @@ if (filters.categoryId) {
       </p>
 
       <div className="entries-list">
-          {filteredEntries.map((entry) => (
+        {filteredEntries.map((entry) => (
           <EntryCard
-            key={entry.id} 
+            key={entry.id}
             entry={entry}
             onLike={() => handleLike(entry.id)}
             onDelete={() => handleDelete(entry.id)}
