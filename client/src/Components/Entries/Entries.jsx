@@ -96,7 +96,7 @@ export default function Entries() {
     //   );
     // }
 
-    // Filtering by category name from dropdown filter
+    // // Filtering by category name from dropdown filter
     // if (category) {
     //   filtered = filtered.filter(
     //     (entry) => entry.category?.toLowerCase() === category.toLowerCase()
@@ -106,6 +106,18 @@ export default function Entries() {
     //     (entry) => entry.category?.toLowerCase() === filters.categoryName.toLowerCase()
     //   );
     // }
+
+    if (filters.typeId) {
+  filtered = filtered.filter(
+    (entry) => entry.type_id === Number(filters.typeId)
+  );
+}
+
+if (filters.categoryId) {
+  filtered = filtered.filter(
+    (entry) => entry.category_id === Number(filters.categoryId)
+  );
+}
 
     setFilteredEntries(filtered);
   }, [filters, entries, type, category]);
