@@ -64,28 +64,28 @@ I started with rough ideas about CRUD operations and filters. Initially everythi
 ---
 
 ## WireFrame
-![Wireframe](./images/wireframe1.png)
-![Wireframe](./images/wireframe2.png)
+![Wireframe](./Images/wireframe1.png)
+![Wireframe](./Images/wireframe2.png)
 
 ---
 
 ## Trello
-![Trello](./images/Trello.png)
+![Trello](./Images/Trello.png)
 
 ---
 
 ## DrawSql
-![SQL Table](./images/DrawSql.png)
+![SQL Table](./Images/DrawSql.png)
 
 ---
 
 ## LightHouse
-![Accessibility](./images/Accessibility.png)
+![Accessibility](./Images/Accessibility.png)
 
 ---
 
 ## First Shock
-![Wireframe Preview](./images/Errors.png)
+![Wireframe Preview](./Images/Errors.png)
 
 ---
 
@@ -104,6 +104,7 @@ This project was a wild ride full of trial and error — and a lot of learning:
 - I got all the errors from 🚨 500 to 404 to 400, mismatched id. I tried to fixed them through google console and networking tab and preview then so many trial and errors. Sometimes entries were not fetching, sometimes types and categories.
 - I thought I have installed react router and was getting error, showed my codes to Bertie and everything looked good, thanks for his advice,  I checked and found I did not install it and after installing it resolved the issue.
 - Created Jobs.js Notes.jsx, Replies.jsx but due to lack of time and so many trials and errors decided to delete it. 
+- I experimented with environment variables, I added my backend (server's) URL in .env.production to hide it and it didn't work. I made millions of changes in the code but eventually found the problem. When I added my URL in the code everything started working.
 
 ---
 
